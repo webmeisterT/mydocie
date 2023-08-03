@@ -7,23 +7,33 @@ header('Access-Control-Allow-Headers: X-Requested-With');
 require_once "../vendor/autoload.php";
 
 use App\ReadRecords;
+use App\Auth;
+
 $read_all = new ReadRecords;
 
-// Get info from URL
-$patient = isset($_GET['patient']) ? $_GET['patient'] : '';
+//Get all headers
+$allheaders = getallheaders();
+//Check if user has access and then decode the jwt token
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($allheaders['Authorization'])) {
+    $id = Auth::decodeAuth($allheaders);
 
-// Get patient value
-if (!empty($patient) && $patient == 1) {
-    $response = $read_all->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "1 ORDER BY createdAt ASC", []);
+    // Get all patient
+    if (!empty($id)) {
+        $response = $read_all->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "1 ORDER BY createdAt ASC", []);
 
-    if (is_array($response)) {
-        http_response_code(200);
-        echo json_encode(["success" => true, "message" => "Successful", "data" => $response]);
+        if (is_array($response)) {
+            http_response_code(200);
+            echo json_encode(["success" => true, "message" => "Successful", "data" => $response]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Not successful", "data" => null]);
+        }
+        
     } else {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Not successful", "data" => null]);
+        return http_response_code(401); 
     }
-    
 } else {
-    return http_response_code(401); 
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "Sorry, you don't have access to this page"]);
+
 }

@@ -6,6 +6,7 @@ header('Access-Control-Allow-Headers: X-Requested-With');
 // header('Access-Control-Allow-Credentials: true');
 
 use App\UpdateRecord;
+$update_record = new UpdateRecord;
 
 
 $data = json_decode($_POST['data']);
@@ -22,7 +23,7 @@ $filename = uniqid() . uniqid() . "." . $extension;
 $filepath = $upload_path . $filename;
 if ($res = move_uploaded_file($_FILES['file']['tmp_name'], $filepath)) {
 
-    if (UpdateRecord::update("patients", "logo=:logo", "id=:id", ['id' => $id, 'logo' => $filename])) {
+    if ($update_record->update("patients", "image=:image", "id=:id", ['id' => $id, 'image' => $filename])) {
         echo json_encode(["success" => true, "message" => "Successful", "data" => null]);
     } else {
         echo json_encode(["success" => false, "message" => "Unable To Upload File", "data" => null]);

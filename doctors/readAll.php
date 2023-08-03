@@ -7,13 +7,18 @@ header('Access-Control-Allow-Headers: X-Requested-With');
 require_once "../vendor/autoload.php";
 
 use App\ReadRecords;
+use App\Auth;
+
 $read_all = new ReadRecords;
 
-// Get info from URL
-$doctor = isset($_GET['doctor']) ? $_GET['doctor'] : '';
+//Get all headers
+$allheaders = getallheaders();
+//Check if user has access and then decode the jwt token
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($allheaders['Authorization'])) {
+    $id = Auth::decodeAuth($allheaders);
 
 // Get doctor value
-if (!empty($doctor) && $doctor == 2) {
+if (!empty($id)) {
     $response = $read_all->read("id, first_name, last_name, username, email, phone, specialization, current_clinic, image", "doctors", "1 ORDER BY createdAt ASC", []);
 
     if (is_array($response)) {
@@ -26,4 +31,9 @@ if (!empty($doctor) && $doctor == 2) {
     
 } else {
     return http_response_code(401); 
+}
+} else {
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "Sorry, you don't have access to this page"]);
+
 }

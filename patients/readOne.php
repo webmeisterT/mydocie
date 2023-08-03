@@ -7,10 +7,14 @@ header('Access-Control-Allow-Headers: X-Requested-With');
 require_once "../vendor/autoload.php";
 
 use App\ReadOneRecord;
-$read_one = new ReadOneRecord;
-// Get info from URL
-$id = isset($_GET['id']) ? $_GET['id'] : '';
+use App\Auth;
 
+$read_one = new ReadOneRecord;
+//Get all heders
+$allheaders = getallheaders();
+//Check if user has access and then decode the jwt token
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($allheaders['Authorization'])) {
+    $id = Auth::decodeAuth($allheaders);
 // Get user 
 if (!empty($id)) {
     $response = $read_one->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "id=:id ORDER BY createdAt ASC", ["id"=>$id]);
@@ -25,4 +29,9 @@ if (!empty($id)) {
     
 } else {
     return http_response_code(400);    
+}
+} else {
+    http_response_code(401);
+    echo json_encode(["success" => false, "message" => "Sorry, you don't have access to this page"]);
+
 }

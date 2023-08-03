@@ -11,13 +11,6 @@ use App\Auth;
 use App\ReadOneRecord;
 $read_one = new ReadOneRecord;
 
-if (Auth::authenticate()) {
-	http_response_code(200);
-	echo json_encode(Auth::authenticate());
-} else {
-	http_response_code(404);
-	echo json_encode(["success" => false, "message" => "Could not create token"]);
-}
 
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -30,8 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 			if ($response) {
 				if (password_verify($password, $response['password'])) {
+					
 					http_response_code(202);
-					echo json_encode(["success" => true, "message" => "Successfully logged in", "data" => $read_one->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "email=:email", ['email' => $email])]);					
+
+					echo json_encode(["success" => true, "message" => "Successfully logged in", 
+					"jwt" => Auth::authenticate($response['id'], $response['email']),
+					// "data" => $read_one->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "email=:email", ['email' => $email])
+				]);					
 				} else {					
 					http_response_code(401);
 					echo json_encode(["success" => false, "message" => "Invalid credentials", "data" => null]);
@@ -46,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 			if ($response) {
 				if (password_verify($password, $response['password'])) {
 					http_response_code(202);
-					echo json_encode(["success" => true, "message" => "Successfully logged in", "data" => $read_one->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "username=:username", ['username' => $username])]);					
+					echo json_encode(["success" => true, "message" => "Successfully logged in", "jwt" => Auth::authenticate($response['id'], $response['email']), 
+					// "data" => $read_one->read("id, first_name, last_name,username, email, phone, language, weight, height, gender, age, street, city, state, country, image", "patients", "username=:username", ['username' => $username])
+				]);				
 				} else {					
 					http_response_code(401);
 					echo json_encode(["success" => false, "message" => "Invalid credentials", "data" => null]);
