@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 26, 2023 at 12:54 PM
+-- Generation Time: Aug 03, 2023 at 04:21 PM
 -- Server version: 5.7.33
 -- PHP Version: 8.1.10
 
@@ -175,6 +175,33 @@ INSERT INTO `patients` (`id`, `first_name`, `last_name`, `username`, `email`, `p
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL,
+  `tx_ref` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` decimal(15,2) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `tx_ref`, `first_name`, `last_name`, `email`, `amount`, `createdAt`, `updatedAt`) VALUES
+(1, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:17:08', '2023-07-28 11:17:08'),
+(2, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:28:18', '2023-07-28 11:28:18'),
+(3, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:29:04', '2023-07-28 11:29:04'),
+(4, '64cbae992e4be64cbae992e4c0', 'Jane', 'Lawson', 'lawsonjane@gmail.com', '30000.00', '2023-08-03 14:41:48', '2023-08-03 14:41:48');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `prescriptions`
 --
 
@@ -245,6 +272,12 @@ ALTER TABLE `patients`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
@@ -284,19 +317,25 @@ ALTER TABLE `ekiti_clinics`
 -- AUTO_INCREMENT for table `insurance_records`
 --
 ALTER TABLE `insurance_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
