@@ -14,22 +14,27 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-require 'PHPMailer/src/Exception.php';
+require '../PHPMailer/src/PHPMailer.php';
+require '../PHPMailer/src/SMTP.php';
+require '../PHPMailer/src/Exception.php';
 
 
 $mail = new PHPMailer();
 $update_record = new UpdateRecord;
 $read_one = new ReadOneRecord;
 
-$read_one->read("email", "doctors", "email=:email", ['email'=>$email]);
 // Get raw posted data as associative array
 $data = json_decode(file_get_contents("php://input"), true);
-
-$mailing = MailUser::mail_user($mail, $data['email']);
-if($mailing['mailsent']){
-    echo  json_encode(["success" => true, "message" => "Email sent Successful", "data" => null]) ;
-}else{
-    echo json_encode(["success" => false, "message" => "Email sending Not Successful", "data" => null]);
-}		
+extract($data);
+$token = uniqid();
+$res = $read_one->read("id, email", "doctors", "email=:email", ['email'=>$email]);
+if ($res) {
+    if ($update_record->update('doctors', 'token=:token', 'id=:id', ["id"=>$res['id'], "token"=>$token])) {
+        $mailing = MailUser::mail_user($mail, ['email'=>$email, 'token'=>$token, 'user'=>'doctors']);
+        if($mailing['mailsent']){
+            echo  json_encode(["success" => true, "message" => "Email sent Successful"]) ;
+        }else{
+            echo json_encode(["success" => false, "message" => $mailing['message']]);
+        }	
+    }	
+}

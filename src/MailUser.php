@@ -9,9 +9,9 @@ public static function mail_user($mail, $data)
     {
         extract($data);
 
-            $mail->setFrom('admin@misionschannel.org.ng', 'Monitum Website');
-            $mail->addAddress($email, 'MyDocier');
-            $mail->addReplyTo("admin@misionschannel.org.ng");
+            $mail->setFrom('info@missionschannel.org.ng', 'MyDocie Website');
+            $mail->addAddress($email, 'MyDocie');
+            $mail->addReplyTo("info@missionschannel.org.ng");
             $mail->isHTML(true);
             $mail->Subject = 'Forgot Password';
             $mail->Body = '
@@ -62,7 +62,7 @@ public static function mail_user($mail, $data)
                 <body>
                     <main class="container">
                         <p>You sent a request to change your pawword! Please Click on the link below to create a new password. </p>
-                        <p>'. 'www.frontend.test/reset_password.php?email=' .$email. 'code=' .uniqid() . '</b>
+                        <p> <a href="https://docie.000webhostapp.com/api/v1/'.$user.'/reset_password.php?email=' .$email. '&token=' .$token . '">click here</a></p>
                         <h4><b>Thanks</b></h4>
                     </main>
                     </body>
@@ -71,11 +71,12 @@ public static function mail_user($mail, $data)
             $mail->AltBody = 'You sent a request to change your pawword! Please Click on the link below to create a new password.';
         
             $mail->isSMTP();
-            $mail->Host = 'mail.misionschannel.org.ng';
+            // $mail->SMTPDebug = 2;
+            $mail->Host = 'mail.missionschannel.org.ng';
             $mail->SMTPAuth = TRUE;
             $mail->SMTPSecure = 'ssl';
-            $mail->Username = 'admin@misionschannel.org.ng';
-            $mail->Password = 'admin@misionschannel.org.ng';
+            $mail->Username = 'info@missionschannel.org.ng';
+            $mail->Password = 'info@missionschannel.org.ng';
             $mail->Port = 465;
         
             $mail->SMTPOptions = array(

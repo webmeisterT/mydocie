@@ -7,19 +7,18 @@ header('Access-Control-Allow-Headers: X-Requested-With');
 
 require_once "../vendor/autoload.php";
 
-use App\CreateRecord;
 
-$create_record = new CreateRecord;
 // Get raw posted data as associative array
 $data = json_decode(file_get_contents("php://input"), true);
 extract($data);
     
       $request = [
-        'tx_ref' => uniqid().uniqid(),
+        
+        'tx_ref' => bin2hex(random_bytes(8)),
         'amount' => $amount,
         'currency' => 'NGN',
         'payment_options' => 'card',
-        'redirect_url' => 'index.php', //replace with yours
+        'redirect_url' => 'http://127.0.0.1/mydocie/api/v1/patients/process_payment.php', //replace with yours
         'customer' => [
             'email' => $email,
             'name' => $first_name. ' '.$last_name
@@ -28,7 +27,7 @@ extract($data);
             'price' => $amount
         ],
         'customizations' => [
-            'title' => 'Paying for health service', //Set your title
+            'title' => 'MyDocie Health Services', //Set your title
             'description' => 'MyDocie'
         ]
     ];
@@ -57,39 +56,19 @@ extract($data);
     curl_close($curl);
     
     $res = json_decode($response);
-    // var_dump($res);
+
     if($res->status == 'success')
     {
-        // Initialize create parameters
-        $column = "tx_ref, first_name, last_name, email, amount";
-        $value = ":tx_ref, :first_name, :last_name, :email, :amount";
-        $data = [
-            "tx_ref" => $request['tx_ref'],
-            "first_name" => $first_name,
-            "last_name" => $last_name,
-            "email" => $email,
-            "amount" => $amount,
-        ];
-        // Create client
-        $res2 = $create_record->create("payments",$column,$value,$data);
-
-        if ($res2) {
-            http_response_code(201);
-            echo json_encode(["success" => true, "message" => "Payment successful"]);
-        } else {
-            http_response_code(400);
-            echo json_encode(["success" => false, "message" => "Record cannot be created"]);
-        }
-        // $link = $res->data->link;
-        // print_r((array)$res);
+        $link = $res->data->link;        
         // header('Location: '.$link);
-    }
-    else
-    {
+        http_response_code(201);
+        echo json_encode(["success" => true, "message" => $link]);
+    // } else {
+        
+    // }
+    } else {
         http_response_code(422);
         echo json_encode(["success" => false, "message" => $res->message]);
     }
+
     // Ifedavid001@080
-
-
-
