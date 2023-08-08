@@ -18,11 +18,11 @@
 
 ## Features
 
-    - Registration system (Both Patient and Doctor can register)
-    - Login system (Both Patient and Doctor can login)
-    - User Authentication with JWT
-    - Payment system with Flutterwave
-    - Forgot Password (by Mailing link to change password to the user's email address)
+* Registration system (Both Patient and Doctor can register)
+* Login system (Both Patient and Doctor can login)
+* User Authentication with JWT
+* Payment system with Flutterwave
+* Forgot Password (by Mailing link to change password to the user's email address)
 
-    - PHPUnit was used for Unit Testing
-    - PHPMailer was used for mailing
+* PHPUnit was used for Unit Testing
+* PHPMailer was used for mailing
