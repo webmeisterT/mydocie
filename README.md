@@ -8,12 +8,12 @@
 - GET: To retrive resources
 - POST: TO create resources
 - PUT: To Update resources
-- DELETE: To delete resources
+- DELETE: To delete resources <br /><br />
 
 
 ## Link to the postman documentation
 
-### https://documenter.getpostman.com/view/23039495/2s946o59pG
+### https://documenter.getpostman.com/view/23039495/2s946o59pG <br /><br />
 
 
 ## Features
@@ -25,4 +25,4 @@
 * Forgot Password (by Mailing link to change password to the user's email address)
 
 * PHPUnit was used for Unit Testing
-* PHPMailer was used for mailing
+* PHPMailer was used for mailing <br /><br />
