@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 03, 2023 at 04:21 PM
+-- Generation Time: Aug 09, 2023 at 09:30 PM
 -- Server version: 5.7.33
 -- PHP Version: 8.1.10
 
@@ -38,15 +38,6 @@ CREATE TABLE `appointments` (
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `appointments`
---
-
-INSERT INTO `appointments` (`id`, `patient_id`, `doctor_id`, `appointed_date`, `appointed_time`, `appointed_type`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 1, '2025-07-23', '08:30:00', 'video', '2023-07-26 11:47:06', '2023-07-26 11:47:31'),
-(2, 1, 1, '2025-07-23', '08:30:00', 'video', '2023-07-26 12:28:57', '2023-07-26 12:28:57'),
-(3, 1, 1, '2026-07-23', '08:30:00', 'video', '2023-07-26 12:29:01', '2023-07-26 12:31:24');
-
 -- --------------------------------------------------------
 
 --
@@ -59,6 +50,7 @@ CREATE TABLE `doctors` (
   `last_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(199) COLLATE utf8mb4_unicode_ci NOT NULL,
   `specialization` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -67,14 +59,6 @@ CREATE TABLE `doctors` (
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `doctors`
---
-
-INSERT INTO `doctors` (`id`, `first_name`, `last_name`, `username`, `email`, `phone`, `password`, `specialization`, `current_clinic`, `image`, `createdAt`, `updatedAt`) VALUES
-(1, 'John', 'Doe', 'johndoe', 'johndoe@gmail.com', '08011111111', '$2y$12$AUFpWzhwWCh7m42.5xBez.7j4Lrq2MhCAlY/q87CGearseMek3Gym', 'specialization', 'current_clinic', NULL, '2023-07-25 15:00:57', '2023-07-26 11:03:03'),
-(4, 'Mary', 'Jane', 'maryjane', 'maryjanr@gmail.com', '0809999999', '$2y$12$vIh5DnXyqKGRnnyaKXrinOchmVfi3Ya87S2uLKUKMKBDn8n76Ezfq', NULL, NULL, NULL, '2023-07-26 11:03:28', '2023-07-26 11:03:28');
 
 -- --------------------------------------------------------
 
@@ -91,13 +75,6 @@ CREATE TABLE `drugs` (
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `drugs`
---
-
-INSERT INTO `drugs` (`id`, `name`, `mg`, `quantity`, `createdBy`, `createdAt`, `updatedAt`) VALUES
-(2, 'Paracetamol', '500', 2000, 'John Doe', '2023-07-26 12:48:09', '2023-07-26 12:48:09');
 
 -- --------------------------------------------------------
 
@@ -130,13 +107,6 @@ CREATE TABLE `insurance_records` (
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `insurance_records`
---
-
-INSERT INTO `insurance_records` (`id`, `patient_id`, `details`, `type_of_insurance`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 'testing', 'testing', '2023-07-26 13:48:22', '2023-07-26 13:50:03');
-
 -- --------------------------------------------------------
 
 --
@@ -150,6 +120,7 @@ CREATE TABLE `patients` (
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `token` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `language` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `weight` int(4) DEFAULT NULL,
@@ -165,13 +136,6 @@ CREATE TABLE `patients` (
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `patients`
---
-
-INSERT INTO `patients` (`id`, `first_name`, `last_name`, `username`, `email`, `phone`, `password`, `language`, `weight`, `height`, `gender`, `age`, `street`, `city`, `state`, `country`, `image`, `createdAt`, `updatedAt`) VALUES
-(1, 'Mary', 'Jane', 'maryjane', 'maryjanr@gmail.com', '0809999999', '$2y$12$HIMMLtSkQ.bVy7tHrkzn8e0p25EDTmaB9bGh0hYXEOUckhZB.c3N6', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-07-26 11:10:36', '2023-07-26 11:45:33');
-
 -- --------------------------------------------------------
 
 --
@@ -180,24 +144,15 @@ INSERT INTO `patients` (`id`, `first_name`, `last_name`, `username`, `email`, `p
 
 CREATE TABLE `payments` (
   `id` int(11) NOT NULL,
-  `tx_ref` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tx_ref` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `transaction_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(15,2) NOT NULL,
+  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`id`, `tx_ref`, `first_name`, `last_name`, `email`, `amount`, `createdAt`, `updatedAt`) VALUES
-(1, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:17:08', '2023-07-28 11:17:08'),
-(2, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:28:18', '2023-07-28 11:28:18'),
-(3, 'uijg57665ffrddfft66txt', 'Jane', '', 'maryjane@gmail.com', '30000.00', '2023-07-28 11:29:04', '2023-07-28 11:29:04'),
-(4, '64cbae992e4be64cbae992e4c0', 'Jane', 'Lawson', 'lawsonjane@gmail.com', '30000.00', '2023-08-03 14:41:48', '2023-08-03 14:41:48');
 
 -- --------------------------------------------------------
 
@@ -220,13 +175,6 @@ CREATE TABLE `prescriptions` (
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `prescriptions`
---
-
-INSERT INTO `prescriptions` (`id`, `patient_id`, `doctor_id`, `drug_name`, `dosage`, `duration`, `repeat_drug`, `day_time`, `diet_type`, `diagnosis`, `doctor_note`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 1, 'Paracetamol', '1 Tablet', '1 Week', 'Everyday', 'Morning', 'After food', 'Malaria', 'Test were condected and it shows there is malaraia parasite in the blood', '2023-07-26 13:32:14', '2023-07-26 13:32:14');
 
 --
 -- Indexes for dumped tables
@@ -293,19 +241,19 @@ ALTER TABLE `prescriptions`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `ekiti_clinics`
@@ -317,25 +265,25 @@ ALTER TABLE `ekiti_clinics`
 -- AUTO_INCREMENT for table `insurance_records`
 --
 ALTER TABLE `insurance_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
